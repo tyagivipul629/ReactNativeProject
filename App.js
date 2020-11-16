@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import {
   View,
@@ -31,8 +30,7 @@ class App extends React.Component{
                autoCapitalize = "none"
                backgroundColor="yellow"
                onChangeText={this.handleText} />
-      <Text>{this.state.inptext}</Text>
-      <Text>Helloj</Text>
+      <Text>Hello {this.state.inptext}</Text>
     </View>
   );
 }
