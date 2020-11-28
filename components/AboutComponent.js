@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import {Icon} from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
+import Loading from './LoadingComponent.js';
 
 
 class About extends React.Component{
@@ -29,6 +30,28 @@ class About extends React.Component{
         );
     }
     render(){
+        if (this.props.leaders.isLoading) {
+            console.log("true");
+            return(
+                <ScrollView>
+                    <Card title='Corporate Leadership'>
+                        <Loading />
+                    </Card>
+                </ScrollView>
+            );
+        }
+        else if (this.props.leaders.errMess) {
+            return(
+                <ScrollView>
+                    
+                    <Card
+                        title='Corporate Leadershi'>
+                        <Text>{this.props.leaders.errMess}</Text>
+                    </Card>
+                </ScrollView>
+            );
+        }
+        else{
         return(
             <ScrollView>
             <Card title="About Us" titleStyle={{fontSize:20}}>
@@ -46,7 +69,7 @@ CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines i
             </Card>
             <Card title="Corporate Leadership" titleStyle={{fontSize:20}}>
             <FlatList 
-                    data={this.props.leaders}
+                    data={this.props.leaders.leaders}
                     renderItem={this.renderMenuItem}
                     keyExtractor={item => item.id.toString()}
                     />
@@ -54,11 +77,12 @@ CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines i
             </ScrollView>
         );
     }
+    }
 }
 
 const mapStateToProps=(state)=>{
     return{
-        leaders: state.leaders.leaders
+        leaders: state.leaders
     }
 }
 

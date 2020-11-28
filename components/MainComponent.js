@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Menu from './MenuComponent';
-import { DISHES } from '../shared/dishes';
 import DishDetail from './DishDetail.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, SafeAreaView } from '@react-navigation/stack';
@@ -43,7 +42,7 @@ const CustomDrawerContentComponent = (props) => {
     
       <View style={styles.drawerHeader}>
         <View style={{flex:1}}>
-        <Image source={require('./images/logo.png')} style={styles.drawerImage} />
+        <Image source={require('./logo.png')} style={styles.drawerImage} />
         </View>
         <View style={{flex: 2}}>
           <Text style={styles.drawerHeaderText}>Ristorante Con Fusion</Text>
