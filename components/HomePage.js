@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import {DISHES} from '../shared/dishes.js';
-import {LEADERS} from '../shared/leaders.js';
-import {PROMOTIONS} from '../shared/promotions.js';
 import { Card } from 'react-native-elements';
 import {Text, View, ScrollView} from 'react-native';
+import {Icon} from 'react-native-elements';
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
 
 
 const Homepage=createStackNavigator();
@@ -16,7 +16,7 @@ function RenderItem(props){
             <Card
             featuredTitle={item.name}
             featuredSubtitle={item.designation}
-            image={require('./images/uthappizza.png')}
+            image={{uri: baseUrl+item.image}}
             >
                 <Text style={{margin:10}}>{item.description}</Text>
             </Card>
@@ -32,23 +32,27 @@ function RenderItem(props){
 class Home extends React.Component{
     constructor(props){
         super(props);
-        this.state={
-            dishes: DISHES,
-            promotions: PROMOTIONS,
-            leaders: LEADERS
-        };
     }
     render(){
         return(
             <ScrollView>
-                <RenderItem item={this.state.dishes.filter(dish=>dish.featured)[0]} />
-                <RenderItem item={this.state.promotions.filter(promo=>promo.featured)[0]} />
-                <RenderItem item={this.state.leaders.filter(leader=>leader.featured)[0]} />
+                <RenderItem item={this.props.dishes.filter(dish=>dish.featured)[0]} />
+                <RenderItem item={this.props.promotions.filter(promo=>promo.featured)[0]} />
+                <RenderItem item={this.props.leaders.filter(leader=>leader.featured)[0]} />
             </ScrollView>
         );
     }
 }
 
+const mapStateToProps=(state)=>{
+    return{
+      dishes: state.dishes.dishes,
+      promotions: state.promotions.promotions,
+      leaders: state.leaders.leaders
+    }
+}
+
+const ConnectedHome=connect(mapStateToProps)(Home);
 
 function HomePage(props){
     return(<Homepage.Navigator initialRouteName='Home'
@@ -59,9 +63,11 @@ function HomePage(props){
         headerTintColor: "#fff",
         headerTitleStyle: {
             color: "#fff"            
-        }
+        },
+        headerLeft: ()=>(<Icon name="list" type="font-awesome" size={22} color="white" 
+      containerStyle={{paddingLeft: 10}} onPress={()=>props.navigation.toggleDrawer()}/>)
     }}>
-  <Homepage.Screen name="Home" component={Home} />
+  <Homepage.Screen name="Home" component={ConnectedHome} />
   </Homepage.Navigator>
   );
 }

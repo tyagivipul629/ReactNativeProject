@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import {Card} from 'react-native-elements';
 import {View, Text, StyleSheet} from 'react-native';
+import {Icon} from 'react-native-elements';
 
 
 class Contact extends React.Component{
@@ -37,9 +38,11 @@ function ContactComponent(props){
             backgroundColor: "#512DA8"
         },
         headerTintColor: "#fff",
+        headerLeft: ()=>(<Icon name="list" type="font-awesome" size={22} color="white" 
+      containerStyle={{paddingLeft: 10}} onPress={()=>props.navigation.toggleDrawer()}/>)
         
     }}>
-  <ContactPage.Screen name="Contact Us" component={Contact} options={{title:''}}/>
+  <ContactPage.Screen name="Contact Us" component={Contact} options={{title:'Contact Us'}}/>
   </ContactPage.Navigator>
     );
 }

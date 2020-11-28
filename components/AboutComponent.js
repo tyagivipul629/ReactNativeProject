@@ -2,8 +2,10 @@ import React from 'react';
 import {View, Text, FlatList} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {Card, ListItem} from 'react-native-elements';
-import {LEADERS} from '../shared/leaders.js';
 import { ScrollView } from 'react-native-gesture-handler';
+import {Icon} from 'react-native-elements';
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
 
 
 class About extends React.Component{
@@ -14,14 +16,16 @@ class About extends React.Component{
     
     renderMenuItem=({item,index})=>{
         return(
+            <>
             <ListItem
                         key={index}
                         title={item.name}
                         subtitle={item.description}
                         hideChevron={true}
-                        leftAvatar={{ source: require('./images/alberto.png')}}
+                        leftAvatar={{ uri: baseUrl+item.image, rounded: true}}
                         bottomDivider
                       />
+            <Card image={{ uri: baseUrl+item.image, rounded: true}}></Card></>
         );
     }
     render(){
@@ -42,7 +46,7 @@ CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines i
             </Card>
             <Card title="Corporate Leadership" titleStyle={{fontSize:20}}>
             <FlatList 
-                    data={LEADERS}
+                    data={this.props.leaders}
                     renderItem={this.renderMenuItem}
                     keyExtractor={item => item.id.toString()}
                     />
@@ -51,6 +55,14 @@ CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines i
         );
     }
 }
+
+const mapStateToProps=(state)=>{
+    return{
+        leaders: state.leaders.leaders
+    }
+}
+
+const ConnectedAbout=connect(mapStateToProps)(About);
 
 const AboutPage=createStackNavigator();
 
@@ -64,10 +76,12 @@ function AboutComponent(props){
         headerTintColor: "#fff",
         headerTitleStyle: {
             color: "#fff"            
-        }
+        },
+        headerLeft: ()=>(<Icon name="list" type="font-awesome" size={22} color="white" 
+      containerStyle={{paddingLeft: 10}} onPress={()=>props.navigation.toggleDrawer()}/>)
         
     }}>
-  <AboutPage.Screen name="About Us" component={About} options={{title:'About Us'}}/>
+  <AboutPage.Screen name="About Us" component={ConnectedAbout} options={{title:'About Us'}}/>
   </AboutPage.Navigator>
     );
 }
