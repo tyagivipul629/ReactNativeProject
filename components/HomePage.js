@@ -5,11 +5,25 @@ import {Text, View, ScrollView} from 'react-native';
 import {Icon} from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
+import Loading from './LoadingComponent';
 
 
 const Homepage=createStackNavigator();
 
 function RenderItem(props){
+    if (props.isLoading) {
+        return(
+                <Loading />
+        );
+    }
+    else if (props.errMess) {
+        return(
+            <View> 
+                <Text>{props.erreMess}</Text>
+            </View>
+        );
+    }
+    else{
     const item=props.item;
     if(item!=null){
         return(
@@ -28,6 +42,7 @@ function RenderItem(props){
         );
     }
 }
+}
 
 class Home extends React.Component{
     constructor(props){
@@ -36,9 +51,9 @@ class Home extends React.Component{
     render(){
         return(
             <ScrollView>
-                <RenderItem item={this.props.dishes.filter(dish=>dish.featured)[0]} />
-                <RenderItem item={this.props.promotions.filter(promo=>promo.featured)[0]} />
-                <RenderItem item={this.props.leaders.filter(leader=>leader.featured)[0]} />
+                <RenderItem item={this.props.dishes.dishes.filter(dish=>dish.featured)[0]} isLoading={this.props.dishes.isLoading} />
+                <RenderItem item={this.props.promotions.promotions.filter(promo=>promo.featured)[0]} isLoading={this.props.promotions.isLoading} />
+                <RenderItem item={this.props.leaders.leaders.filter(leader=>leader.featured)[0]} isLoading={this.props.leaders.isLoading} />
             </ScrollView>
         );
     }
@@ -46,9 +61,9 @@ class Home extends React.Component{
 
 const mapStateToProps=(state)=>{
     return{
-      dishes: state.dishes.dishes,
-      promotions: state.promotions.promotions,
-      leaders: state.leaders.leaders
+      dishes: state.dishes,
+      promotions: state.promotions,
+      leaders: state.leaders
     }
 }
 

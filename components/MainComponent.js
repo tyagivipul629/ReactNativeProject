@@ -8,6 +8,7 @@ import {createDrawerNavigator, DrawerItemList, DrawerItems, DrawerContentScrollV
 import HomePage from './HomePage.js';
 import ContactComponent from './ContactComponent.js';
 import AboutComponent from './AboutComponent.js';
+import Reservation from './ReservationComponent.js';
 import {Icon} from 'react-native-elements';
 import { Image} from 'react-native';
 import { connect } from 'react-redux';
@@ -107,6 +108,17 @@ class Main extends Component {
           drawerIcon: ({focused, size}) => (
             <Icon
               name="info-circle"
+              type="font-awesome"
+              size={size}
+              color={focused ? '#7cc' : '#ccc'}
+            />
+          )
+        }}/>
+        <Drawer.Screen name="Reservation" component={Reservation} options={{
+          title: 'Reservation',
+          drawerIcon: ({focused, size}) => (
+            <Icon
+              name="cutlery"
               type="font-awesome"
               size={size}
               color={focused ? '#7cc' : '#ccc'}

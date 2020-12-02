@@ -3,6 +3,7 @@ import { View, FlatList } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl.js';
+import Loading from './LoadingComponent.js';
 
 class Menu extends React.Component {
     constructor(props){
@@ -24,9 +25,19 @@ class Menu extends React.Component {
                       />
             );
         };
+        if(this.props.dishes.isLoading){
+            return(
+                <Loading />
+            );
+        }
+        else if(this.props.dishes.errMess){
+            return(
+            <Text>{this.props.dishes.errMess}</Text>
+            );
+        }
         return (
                 <FlatList 
-                    data={this.props.dishes}
+                    data={this.props.dishes.dishes}
                     renderItem={renderMenuItem}
                     keyExtractor={item => item.id.toString()}
                     />
@@ -36,7 +47,7 @@ class Menu extends React.Component {
 
 const mapStateToProps=(state)=>{
     return{
-        dishes: state.dishes.dishes
+        dishes: state.dishes
     }
 }
 

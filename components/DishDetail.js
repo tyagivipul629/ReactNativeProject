@@ -4,6 +4,7 @@ import {Card, Icon} from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import {baseUrl} from '../shared/baseUrl.js';
 import { connect } from 'react-redux';
+import { postFavorite, excludeFavorite } from '../redux/ActionCreators.js';
 
 function RenderDish(props){
     const dish=props.dish;
@@ -23,7 +24,7 @@ function RenderDish(props){
                     name={ props.favorite ? 'heart' : 'heart-o'}
                     type='font-awesome'
                     color='#f50'
-                    onPress={() => props.favorite ? console.log('Already favorite') : props.onPress(dish.id)}
+                    onPress={() => props.favorite ?  props.deleteFavorite(dish.id): props.addFavorite(dish.id)}
                     />
             </Card>
         );
@@ -61,22 +62,21 @@ function RenderComments(props){
 }
 
 class DishDetail extends React.Component{
-    constructor(props){
-        super(props);
-        this.state={
-            favorites: []
-        }
+
+    markFavorite=(dishId)=>{
+        this.props.dispatch(postFavorite(dishId));
     }
 
-    markFavorite=(dishId) =>{
-        this.setState({favorites: this.state.favorites.concat(dishId)});
+    removeFavorite=(dishId)=>{
+        this.props.dispatch(excludeFavorite(dishId));
     }
-    
+
     render(){
+        console.log(this.props.favorite);
     const selectedDishId=this.props.route.params.id;
-    return(<><RenderDish dish={this.props.dishes.filter(item=>item.id===selectedDishId)[0]} onPress={
+    return(<><RenderDish dish={this.props.dishes.filter(item=>item.id===selectedDishId)[0]} addFavorite={
         (dishId)=>this.markFavorite(dishId)
-    } favorite={this.state.favorites.some((item)=>item===selectedDishId)} />
+    } deleteFavorite={(dishId)=>this.removeFavorite(dishId)} favorite={this.props.favorite.includes(selectedDishId)} />
             <RenderComments comments={this.props.comments.filter((comment)=>comment.dishId===selectedDishId)} /></>);
     }
 }
@@ -84,7 +84,8 @@ class DishDetail extends React.Component{
 const mapStateToProps=(state)=>{
     return{
         dishes: state.dishes.dishes,
-        comments: state.comments.comments
+        comments: state.comments.comments,
+        favorite: state.favorite
     }
 }
 

@@ -141,3 +141,27 @@ export const addLeaders = (leaders) => ({
     type: ActionTypes.ADD_LEADERS,
     payload: leaders
 });
+
+export const postFavorite=(dishId)=>(dispatch)=>{
+    setTimeout(()=>{
+        dispatch(addFavorite(dishId));
+    },1000);
+}
+
+addFavorite=(dishId)=>({
+    type: ActionTypes.ADD_FAVORITE,
+    payload: dishId
+})
+
+export const excludeFavorite=(dishId)=>(dispatch)=>{
+    console.log("hello");
+    setTimeout(()=>{
+        console.log("hello from settimeout");
+        dispatch(removeFavorite(dishId));
+    },1000);
+}
+
+removeFavorite=(dishId)=>({
+    type: ActionTypes.REMOVE_FAVORITE,
+    payload: dishId
+})
