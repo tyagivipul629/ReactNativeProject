@@ -4,7 +4,7 @@ export const favorite=(state=[],action)=>{
         case ActionTypes.ADD_FAVORITE:
             if(state.includes(action.payload)) return state;
             else return state.concat(action.payload);
-        case ActionTypes.REMOVE_FAVORITE:
+        case ActionTypes.DELETE_FAVORITE:
             {return state.filter(elem=>elem!==action.payload)}
         default: return state;
     }

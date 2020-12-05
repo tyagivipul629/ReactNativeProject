@@ -7,6 +7,7 @@ import {Icon} from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import Loading from './LoadingComponent.js';
+import * as Animatable from 'react-native-animatable';
 
 
 class About extends React.Component{
@@ -53,7 +54,9 @@ class About extends React.Component{
         }
         else{
         return(
+            <>
             <ScrollView>
+                <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
             <Card title="About Us" titleStyle={{fontSize:20}}>
                 <View>
                     <Text>Started in 2010, Ristorante con Fusion quickly established itself as a culinary icon par excellence in 
@@ -67,6 +70,8 @@ CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines i
 </Text>
                 </View>
             </Card>
+            </Animatable.View>
+            <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
             <Card title="Corporate Leadership" titleStyle={{fontSize:20}}>
             <FlatList 
                     data={this.props.leaders.leaders}
@@ -74,7 +79,9 @@ CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines i
                     keyExtractor={item => item.id.toString()}
                     />
             </Card>
+            </Animatable.View>
             </ScrollView>
+            </>
         );
     }
     }

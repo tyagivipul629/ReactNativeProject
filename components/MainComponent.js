@@ -13,6 +13,7 @@ import {Icon} from 'react-native-elements';
 import { Image} from 'react-native';
 import { connect } from 'react-redux';
 import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
+import FavoritesComponent from './FavoritesComponent.js';
 
 
 const Stack = createStackNavigator();
@@ -108,6 +109,17 @@ class Main extends Component {
           drawerIcon: ({focused, size}) => (
             <Icon
               name="info-circle"
+              type="font-awesome"
+              size={size}
+              color={focused ? '#7cc' : '#ccc'}
+            />
+          )
+        }}/>
+        <Drawer.Screen name="Favorites" component={FavoritesComponent} options={{
+          title: 'Favorites',
+          drawerIcon: ({focused, size}) => (
+            <Icon
+              name="heart"
               type="font-awesome"
               size={size}
               color={focused ? '#7cc' : '#ccc'}

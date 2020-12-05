@@ -4,7 +4,7 @@ import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl.js';
 import Loading from './LoadingComponent.js';
-
+import * as Animatable from 'react-native-animatable';
 class Menu extends React.Component {
     constructor(props){
         super(props);
@@ -36,11 +36,13 @@ class Menu extends React.Component {
             );
         }
         return (
+            <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
                 <FlatList 
                     data={this.props.dishes.dishes}
                     renderItem={renderMenuItem}
                     keyExtractor={item => item.id.toString()}
                     />
+            </Animatable.View>
         );
     }
 }

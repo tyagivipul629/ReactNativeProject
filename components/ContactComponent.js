@@ -2,7 +2,8 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import {Card} from 'react-native-elements';
 import {View, Text, StyleSheet} from 'react-native';
-import {Icon} from 'react-native-elements';
+import {Icon, Button} from 'react-native-elements';
+import * as Animatable from 'react-native-animatable';
 
 
 class Contact extends React.Component{
@@ -14,6 +15,7 @@ class Contact extends React.Component{
     }
     render(){
         return(
+            <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
             <Card title="Contact Us" titleStyle={{fontSize:20}}>
                 <View style={styles.text}>
                     <Text style={styles.text}>121, Clear Water Bay Road</Text>
@@ -24,6 +26,7 @@ class Contact extends React.Component{
                     <Text style={styles.text}>Email:confusion@food.net</Text>
                 </View>
             </Card>
+            </Animatable.View>
         );
     }
 }

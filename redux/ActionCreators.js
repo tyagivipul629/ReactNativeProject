@@ -153,15 +153,40 @@ addFavorite=(dishId)=>({
     payload: dishId
 })
 
-export const excludeFavorite=(dishId)=>(dispatch)=>{
-    console.log("hello");
-    setTimeout(()=>{
-        console.log("hello from settimeout");
-        dispatch(removeFavorite(dishId));
-    },1000);
+export const removeFavorite=(dishId)=>({
+    type: ActionTypes.DELETE_FAVORITE,
+    payload: dishId
+})
+
+export const postComment=(dishId,author,comment,rating)=>(dispatch)=>{
+    const date=new Date().toISOString();
+    const newComment={
+        dishId: dishId,
+        author: author,
+        comment: comment,
+        rating: rating,
+        date: new Date().toISOString()
+    }
+
+    fetch(baseUrl+'comments',{
+        method: 'POST',
+        headers:{
+            "Content-type":"application/json"
+        },
+        body: JSON.stringify(newComment),
+        credentials: "same-origin"
+    }).then(response=>{
+        if(response.ok) return response
+        else{
+            var error=new Error('Error '+response.status+': '+response.statusText);
+            error.response=response;
+            throw error;
+        }
+    },error=>{throw error;}).then(response=>{dispatch(addComment(newComment))}).catch(error=>{console.log(error);})
+    
 }
 
-removeFavorite=(dishId)=>({
-    type: ActionTypes.REMOVE_FAVORITE,
-    payload: dishId
+export const addComment=(args)=>({
+    type: ActionTypes.ADD_COMMENT,
+    payload: {dishId: args.dishId, author: args.author, comment: args.comment, rating: args.rating, date: args.date}
 })
