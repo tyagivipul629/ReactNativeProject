@@ -6,6 +6,7 @@ import {Icon} from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import Loading from './LoadingComponent';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 const Homepage=createStackNavigator();
@@ -52,6 +53,7 @@ class Home extends React.Component{
 
     componentDidMount(){
         this.animate();
+        AsyncStorage.clear();
     }
     animate(){
         this.animatedValue.setValue(0);
@@ -103,7 +105,7 @@ function HomePage(props){
     return(<Homepage.Navigator initialRouteName='Home'
     screenOptions={{
         headerStyle: {
-            backgroundColor: "#512DA8"
+            backgroundColor: "#512DA9"
         },
         headerTintColor: "#fff",
         headerTitleStyle: {

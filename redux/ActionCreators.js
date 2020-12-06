@@ -32,6 +32,7 @@ export const addComments = (comments) => ({
 });
 
 export const fetchDishes = () => (dispatch) => {
+    console.log("hello from fetch dishes");
 
     dispatch(dishesLoading());
 

@@ -14,6 +14,9 @@ import { Image} from 'react-native';
 import { connect } from 'react-redux';
 import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
 import FavoritesComponent from './FavoritesComponent.js';
+import TestComponent from './testComponent';
+
+
 
 
 const Stack = createStackNavigator();
@@ -62,6 +65,8 @@ class Main extends Component {
     this.props.dispatch(fetchComments());
     this.props.dispatch(fetchPromos());
     this.props.dispatch(fetchLeaders());
+
+    
   }
   
   render() {
@@ -128,6 +133,17 @@ class Main extends Component {
         }}/>
         <Drawer.Screen name="Reservation" component={Reservation} options={{
           title: 'Reservation',
+          drawerIcon: ({focused, size}) => (
+            <Icon
+              name="cutlery"
+              type="font-awesome"
+              size={size}
+              color={focused ? '#7cc' : '#ccc'}
+            />
+          )
+        }}/>
+        <Drawer.Screen name="TestComponent" component={TestComponent} options={{
+          title: 'TestComponent',
           drawerIcon: ({focused, size}) => (
             <Icon
               name="cutlery"

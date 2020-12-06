@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, Button} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {Card, ListItem} from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -10,10 +10,14 @@ import Loading from './LoadingComponent.js';
 import * as Animatable from 'react-native-animatable';
 
 
+
+
 class About extends React.Component{
     constructor(props){
         super(props);
-        
+        this.state={
+            showDialog: false
+        }
     }
     
     renderMenuItem=({item,index})=>{
@@ -46,7 +50,7 @@ class About extends React.Component{
                 <ScrollView>
                     
                     <Card
-                        title='Corporate Leadershi'>
+                        title='Corporate Leadership'>
                         <Text>{this.props.leaders.errMess}</Text>
                     </Card>
                 </ScrollView>
@@ -79,6 +83,7 @@ CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines i
                     keyExtractor={item => item.id.toString()}
                     />
             </Card>
+            <Button title="Press me" />
             </Animatable.View>
             </ScrollView>
             </>
