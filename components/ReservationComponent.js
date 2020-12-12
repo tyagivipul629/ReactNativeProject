@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Modal, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Modal, TouchableOpacity, Alert } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { createStackNavigator } from '@react-navigation/stack';
 import Moment from 'moment';
+import * as Animatable from 'react-native-animatable';
+import PushNotification from 'react-native-push-notification';
 
 class ReservationComponent extends Component {
 
@@ -20,13 +22,46 @@ class ReservationComponent extends Component {
         }
     }
 
+    componentDidMount(){
+        PushNotification.createChannel(
+            {
+              channelId: "233253", // (required)
+              channelName: "My channel1",
+              vibrate: true // (required)
+              // (optional) default: true. Creates the default vibration patten if true.
+            },
+            (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+          );
+    }
+
     toggleModal() {
         this.setState({showModal: !this.state.showModal});
     }
 
     handleReservation() {
-        console.log(JSON.stringify(this.state));
-        this.toggleModal();
+        Alert.alert(
+            'Your Reservation OK?',
+            'Number of Guests: '+this.state.guests+'\n'+
+            'Smoking? '+this.state.smoking+'\n'+
+            'Date and Time: '+this.state.date,
+            [
+                {
+                    text: 'Cancel',
+                    onPress: ()=>{this.resetForm()}
+                },
+                {
+                    text: 'OK',
+                    onPress: ()=>{PushNotification.localNotificationSchedule({
+                        channelId: "233253",
+                        message: "Your reservation details:\n"+"Number of guests: "+this.state.guests+
+                        "\nSmoking: "+this.state.smoking, // (required)
+                        date: new Date(Date.now() + 20 * 1000), // in 60 secs
+                        allowWhileIdle: true // (optional) set notification to work while on doze, default: false
+                      });this.resetForm()}
+                }
+            ],{cancelable: false}
+        );
+        
     }
 
     resetForm(){
@@ -40,8 +75,10 @@ class ReservationComponent extends Component {
     }
     
     render() {
+        
         return(
             <>
+            <Animatable.View animation="zoomIn" duration={2000} delay={1000}>
             <ScrollView>
                 <View style={styles.formRow}>
                 <Text style={styles.formLabel}>Number of Guests</Text>
@@ -110,23 +147,7 @@ class ReservationComponent extends Component {
                     />
                 </View>
             </ScrollView>
-            <Modal animationType = {"slide"} transparent = {false}
-            visible = {this.state.showModal}
-            onDismiss = {() => this.toggleModal() }
-            onRequestClose = {() => this.toggleModal() }>
-            <View style = {styles.modal}>
-                <Text style = {styles.modalTitle}>Your Reservation</Text>
-                <Text style = {styles.modalText}>Number of Guests: {this.state.guests}</Text>
-                <Text style = {styles.modalText}>Smoking?: {this.state.smoking ? 'Yes' : 'No'}</Text>
-                <Text style = {styles.modalText}>Date and Time: {this.state.date.toString()}</Text>
-                
-                <Button 
-                    onPress = {() =>{this.toggleModal(); this.resetForm();}}
-                    color="#512DA8"
-                    title="Close" 
-                    />
-            </View>
-        </Modal>
+            </Animatable.View>
         </>
         );
     }

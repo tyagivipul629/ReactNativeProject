@@ -1,9 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import {Card} from 'react-native-elements';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Linking, Share} from 'react-native';
 import {Icon, Button} from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
+
 
 
 class Contact extends React.Component{
@@ -25,6 +26,12 @@ class Contact extends React.Component{
                     <Text style={styles.text}>Fax: +852 8765 4321</Text>
                     <Text style={styles.text}>Email:confusion@food.net</Text>
                 </View>
+                <Button
+                        title=" Send Email"
+                        buttonStyle={{backgroundColor: "#512DA8"}}
+                        icon={<Icon name='envelope-o' type='font-awesome' color='white' />}
+                        onPress={() => Linking.openURL('mailto:vipultyagi629@gmail.com?subject=Query Mail&body=Type your query below:') }
+                        />
             </Card>
             </Animatable.View>
         );

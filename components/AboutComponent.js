@@ -1,13 +1,14 @@
 import React from 'react';
 import {View, Text, FlatList, Button} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {Card, ListItem} from 'react-native-elements';
+import {Card, ListItem, Avatar} from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import {Icon} from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import Loading from './LoadingComponent.js';
 import * as Animatable from 'react-native-animatable';
+
 
 
 
@@ -23,15 +24,14 @@ class About extends React.Component{
     renderMenuItem=({item,index})=>{
         return(
             <>
-            <ListItem
-                        key={index}
-                        title={item.name}
-                        subtitle={item.description}
-                        hideChevron={true}
-                        leftAvatar={{ uri: baseUrl+item.image, rounded: true}}
-                        bottomDivider
-                      />
-            <Card image={{ uri: baseUrl+item.image, rounded: true}}></Card></>
+            <ListItem key={index} bottomDivider>
+            <Avatar source={{uri: baseUrl+item.image}} rounded={true} /> 
+                <ListItem.Content>
+                    <ListItem.Title>{item.name}</ListItem.Title>
+                    <ListItem.Subtitle>{item.description}</ListItem.Subtitle>
+                </ListItem.Content>
+            </ListItem>
+            </>
         );
     }
     render(){
@@ -39,7 +39,8 @@ class About extends React.Component{
             console.log("true");
             return(
                 <ScrollView>
-                    <Card title='Corporate Leadership'>
+                    <Card>
+                        <Card.Title>Corporate Leadership</Card.Title>
                         <Loading />
                     </Card>
                 </ScrollView>
@@ -49,8 +50,8 @@ class About extends React.Component{
             return(
                 <ScrollView>
                     
-                    <Card
-                        title='Corporate Leadership'>
+                    <Card>
+                        <Card.Title>Corporate Leadership</Card.Title>
                         <Text>{this.props.leaders.errMess}</Text>
                     </Card>
                 </ScrollView>
@@ -61,7 +62,8 @@ class About extends React.Component{
             <>
             <ScrollView>
                 <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
-            <Card title="About Us" titleStyle={{fontSize:20}}>
+            <Card>
+                <Card.Title style={{fontSize: 20}}>Corporate Leadership</Card.Title>
                 <View>
                     <Text>Started in 2010, Ristorante con Fusion quickly established itself as a culinary icon par excellence in 
                         Hong Kong. With its unique brand of world 
@@ -76,14 +78,14 @@ CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines i
             </Card>
             </Animatable.View>
             <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
-            <Card title="Corporate Leadership" titleStyle={{fontSize:20}}>
+            <Card>
+                <Card.Title>Corporate Leadership</Card.Title>
             <FlatList 
                     data={this.props.leaders.leaders}
                     renderItem={this.renderMenuItem}
                     keyExtractor={item => item.id.toString()}
                     />
             </Card>
-            <Button title="Press me" />
             </Animatable.View>
             </ScrollView>
             </>

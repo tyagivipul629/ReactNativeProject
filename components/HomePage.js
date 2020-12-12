@@ -28,11 +28,10 @@ function RenderItem(props){
     const item=props.item;
     if(item!=null){
         return(
-            <Card
-            featuredTitle={item.name}
-            featuredSubtitle={item.designation}
-            image={{uri: baseUrl+item.image}}
-            >
+            <Card>
+                <Card.Title>{item.name}</Card.Title>
+                <Card.FeaturedSubtitle>{item.designation}</Card.FeaturedSubtitle>
+                <Card.Image source={{uri: baseUrl+item.image}} />
                 <Text style={{margin:10}}>{item.description}</Text>
             </Card>
         );
@@ -53,7 +52,6 @@ class Home extends React.Component{
 
     componentDidMount(){
         this.animate();
-        AsyncStorage.clear();
     }
     animate(){
         this.animatedValue.setValue(0);

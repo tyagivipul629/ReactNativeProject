@@ -1,10 +1,17 @@
 import React from 'react';
 import { View, FlatList, Text } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { ListItem, Avatar, Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl.js';
 import Loading from './LoadingComponent.js';
 import * as Animatable from 'react-native-animatable';
+
+function Description(props){
+    return(
+        <><Text>{props.description}</Text>
+        </>
+    );
+}
 class Menu extends React.Component {
     constructor(props){
         super(props);
@@ -14,15 +21,17 @@ class Menu extends React.Component {
         const renderMenuItem = ({item, index}) => {
 
             return (
-                    <ListItem
-                        key={index}
-                        title={item.name}
-                        subtitle={item.description}
-                        hideChevron={true}
-                        onPress={()=>this.props.
-                            navigation.navigate('DishDetails',{id: item.id})}
-                        leftAvatar={{ uri: baseUrl+item.image}}
-                      />
+                    <>
+                      <ListItem onPress={()=>this.props.
+                            navigation.navigate('DishDetails',{id: item.id})} >
+    <Avatar source={{uri: baseUrl+item.image}} />
+    <ListItem.Content>
+      <ListItem.Title>{item.name}</ListItem.Title>
+      <ListItem.Subtitle><Description description={item.description} /></ListItem.Subtitle>
+    </ListItem.Content>
+    <ListItem.Chevron />
+  </ListItem>
+                      </>
             );
         };
         if(this.props.dishes.isLoading){
@@ -30,13 +39,13 @@ class Menu extends React.Component {
                 <Loading />
             );
         }
-        else if(this.props.dishes.errMess){
+        else if(this.props.dishes.errMess&&this.props.dishes.dishes.length===0){
             return(
             <Text>{this.props.dishes.errMess}</Text>
             );
         }
         return (
-            <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+            <Animatable.View animation="fadeInDown" duration={1000} delay={500}>
                 <FlatList 
                     data={this.props.dishes.dishes}
                     renderItem={renderMenuItem}

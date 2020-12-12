@@ -38,23 +38,19 @@ class testComponent extends React.Component{
             const renderMenuItem=({item,index})=>{
                 return(
                     
-                    <ListItem
-                                key={index}
-                                title={item.first_name}
-                                subtitle={item.last_name}
-                                hideChevron={true}
-                                bottomDivider
-                                onPress={()=>{Alert.alert(
-                                    ''+item.first_name+' '+item.last_name+'',
-                                    ''+item.email+' '+item.gender+' '+item.ip_address,
-                                    [
-                                        {
-                                            text: 'Ok',
-                                            onPress:()=>{}
-                                        }
-                                    ],{cancelable: false}
-                                );}}
-                              />
+                    <ListItem key={index} onPress={()=>{Alert.alert(
+                        ''+item.first_name+' '+item.last_name+'',
+                        ''+item.email+' '+item.gender+' '+item.ip_address,
+                        [
+                            {
+                                text: 'Ok',
+                                onPress:()=>{}
+                            }
+                        ],{cancelable: false}
+                    );}} hideChevron={true} bottomDivider>
+                        <ListItem.Title>{item.first_name}</ListItem.Title>
+                        <ListItem.Subtitle>{item.last_name}</ListItem.Subtitle>
+                    </ListItem>
                     
                 );
             }

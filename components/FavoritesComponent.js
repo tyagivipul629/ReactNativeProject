@@ -54,11 +54,6 @@ class Favorites extends React.Component{
         if(this.props.dishes.isLoading){
             return(<Loading />);
         }
-        else if(this.props.dishes.errMess){
-            return(
-            <View><Text>{this.props.dishes.errMess}</Text></View>
-            );
-        }
         else{
             return(
                 <FlatList

@@ -1,7 +1,10 @@
 import * as ActionTypes from './ActionTypes.js';
 import { baseUrl } from '../shared/baseUrl.js';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export const fetchComments = () => (dispatch) => {
+
+    
     fetch(baseUrl + 'comments')
     .then(response => {
         if (response.ok) {
@@ -21,6 +24,7 @@ export const fetchComments = () => (dispatch) => {
     .catch(error => dispatch(commentsFailed(error.message)));
 };
 
+
 export const commentsFailed = (errmess) => ({
     type: ActionTypes.COMMENTS_FAILED,
     payload: errmess
@@ -32,9 +36,7 @@ export const addComments = (comments) => ({
 });
 
 export const fetchDishes = () => (dispatch) => {
-    console.log("hello from fetch dishes");
 
-    dispatch(dishesLoading());
 
     fetch(baseUrl + 'dishes')
     .then(response => {
@@ -55,10 +57,6 @@ export const fetchDishes = () => (dispatch) => {
     .catch(error => dispatch(dishesFailed(error.message)));
 };
 
-export const dishesLoading = () => ({
-    type: ActionTypes.DISHES_LOADING
-});
-
 export const dishesFailed = (errmess) => ({
     type: ActionTypes.DISHES_FAILED,
     payload: errmess
@@ -71,7 +69,6 @@ export const addDishes = (dishes) => ({
 
 export const fetchPromos = () => (dispatch) => {
     
-    dispatch(promosLoading());
 
     fetch(baseUrl + 'promotions')
     .then(response => {
@@ -92,9 +89,6 @@ export const fetchPromos = () => (dispatch) => {
     .catch(error => dispatch(promosFailed(error.message)));
 };
 
-export const promosLoading = () => ({
-    type: ActionTypes.PROMOS_LOADING
-});
 
 export const promosFailed = (errmess) => ({
     type: ActionTypes.PROMOS_FAILED,
@@ -108,7 +102,6 @@ export const addPromos = (promos) => ({
 
 export const fetchLeaders = () => (dispatch) => {
     
-    dispatch(leadersLoading());
 
     fetch(baseUrl + 'leaders')
     .then(response => {
@@ -129,9 +122,6 @@ export const fetchLeaders = () => (dispatch) => {
     .catch(error => dispatch(leadersFailed(error.message)));
 };
 
-export const leadersLoading = () => ({
-    type: ActionTypes.LEADERS_LOADING
-});
 
 export const leadersFailed = (errmess) => ({
     type: ActionTypes.LEADERS_FAILED,
@@ -190,4 +180,65 @@ export const postComment=(dishId,author,comment,rating)=>(dispatch)=>{
 export const addComment=(args)=>({
     type: ActionTypes.ADD_COMMENT,
     payload: {dishId: args.dishId, author: args.author, comment: args.comment, rating: args.rating, date: args.date}
+})
+
+export const deleteComment=(commentId)=>(dispatch)=>{
+    console.log(commentId);
+    fetch(baseUrl+'comments/'+commentId,{
+        method: 'DELETE',
+        credentials: 'same-origin'
+    }).then(response=>{
+        if(response.ok) return response
+        else{
+            var error=new Error('Error '+response.status+': '+response.statusText);
+            error.response=response;
+            throw error;
+        }
+    },error=>{throw error;}).then(res=>{dispatch(DeleteComment(commentId))}).catch(err=>{console.log(err)})
+}
+
+DeleteComment=(commentId)=>({
+    type: ActionTypes.DELETE_COMMENT,
+    payload: commentId
+})
+
+EditComment=(comment)=>({
+    type: ActionTypes.EDIT_COMMENT,
+    payload: comment
+})
+
+export const editComment=(comment)=>(dispatch)=>{
+    comment.date=new Date().toISOString();
+    fetch(baseUrl+'comments/'+comment.id,{
+        method: 'PUT',
+        headers:{
+            "Content-type":"application/json"
+        },
+        body: JSON.stringify(comment),
+        credentials: 'same-origin'
+    }).then(response=>{
+        if(response.ok) return response
+        else{
+            var error=new Error('Error '+response.status+': '+response.statusText);
+            error.response=response;
+            throw error;
+        }
+    },error=>{throw error;}).then(res=>res.json()).then(res=>{dispatch(EditComment(res))}).catch(err=>{console.log(err)})
+}
+
+export const loginUser=(username)=>(dispatch)=>{
+    setTimeout(()=>dispatch(LoginUser(username)),2000);
+}
+
+const LoginUser=(username)=>({
+    type: ActionTypes.LOGIN_USER,
+    payload: username
+})
+
+export const logoutUser=()=>(dispatch)=>{
+    AsyncStorage.removeItem('userinfo').then(()=>{dispatch(LogoutUser())}).catch((err)=>console.log('could not remove item ',err));
+}
+
+const LogoutUser=()=>({
+    type: ActionTypes.LOGOUT_USER
 })

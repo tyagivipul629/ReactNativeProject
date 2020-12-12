@@ -3,7 +3,7 @@ import Menu from './MenuComponent';
 import DishDetail from './DishDetail.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, SafeAreaView } from '@react-navigation/stack';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Button} from 'react-native';
 import {createDrawerNavigator, DrawerItemList, DrawerItems, DrawerContentScrollView} from '@react-navigation/drawer';
 import HomePage from './HomePage.js';
 import ContactComponent from './ContactComponent.js';
@@ -12,9 +12,13 @@ import Reservation from './ReservationComponent.js';
 import {Icon} from 'react-native-elements';
 import { Image} from 'react-native';
 import { connect } from 'react-redux';
-import { fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionCreators';
+import { fetchDishes, fetchComments, fetchPromos, fetchLeaders, logoutUser } from '../redux/ActionCreators';
 import FavoritesComponent from './FavoritesComponent.js';
 import TestComponent from './testComponent';
+import AsyncStorage from '@react-native-community/async-storage';
+import NetInfo from '@react-native-community/netinfo';
+import LoginComponent from './LoginComponent.js';
+import { UserState } from '../redux/UserState';
 
 
 
@@ -44,38 +48,61 @@ function MenuNavigator(props){
 
 const CustomDrawerContentComponent = (props) => {
   return (<DrawerContentScrollView>
-    
+    <View style={{flexDirection: 'column',justifyContent: 'center', alignItems: 'center'}}>
       <View style={styles.drawerHeader}>
         <View style={{flex:1}}>
-        <Image source={require('./logo.png')} style={styles.drawerImage} />
+          <Image source={require('./logo.png')} style={styles.drawerImage} />
         </View>
         <View style={{flex: 2}}>
           <Text style={styles.drawerHeaderText}>Ristorante Con Fusion</Text>
         </View>
       </View>
+      <View style={{backgroundColor: '#512DA8', alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center'}}><Text style={{fontSize: 25, color: 'white'}}>{props.username}</Text></View>
+      </View>
     <DrawerItemList {...props} />
+    <View><Button title='Logout' buttonStyle={{backgroundColor: '#42cef5'}} onPress={()=>props.dispatch(logoutUser())} /></View>
   </DrawerContentScrollView>)
   
 };
 
 class Main extends Component {
+
+  constructor(props){
+    super(props);
+    this.state={
+      loggedIn: false
+    }
+  }
   
   componentDidMount() {
-    this.props.dispatch(fetchDishes());
     this.props.dispatch(fetchComments());
+    this.props.dispatch(fetchLeaders()); 
     this.props.dispatch(fetchPromos());
-    this.props.dispatch(fetchLeaders());
-
+    this.props.dispatch(fetchDishes());
+    NetInfo.addEventListener(state => {
+      if(state.isConnected){
+        this.props.dispatch(fetchComments());
+    this.props.dispatch(fetchLeaders()); 
+    this.props.dispatch(fetchPromos());
+    this.props.dispatch(fetchDishes());
+      }
+    });
     
   }
+
   
   render() {
  
-    return (
-      <NavigationContainer>
+    if(!this.props.UserState.isLoggedIn){
+        return(
+          <LoginComponent />
+        );
+      }
+    else{
+        return(<NavigationContainer>
       <Drawer.Navigator initialRouteName="Home" drawerStyle={{
     width: 240,
-  }} drawerContent={(props)=><CustomDrawerContentComponent {...props} />}>
+  }} drawerContent={(props)=><CustomDrawerContentComponent {...props} dispatch={this.props.dispatch} username={this.props.UserState.username} />}>
         <Drawer.Screen name="Home" component={HomePage} options={{
           title: 'Home',
           drawerIcon: ({focused, size}) => (
@@ -143,10 +170,10 @@ class Main extends Component {
           )
         }}/>
         <Drawer.Screen name="TestComponent" component={TestComponent} options={{
-          title: 'TestComponent',
+          title: 'Users',
           drawerIcon: ({focused, size}) => (
             <Icon
-              name="cutlery"
+              name="user-circle-o"
               type="font-awesome"
               size={size}
               color={focused ? '#7cc' : '#ccc'}
@@ -154,8 +181,9 @@ class Main extends Component {
           )
         }}/>
       </Drawer.Navigator>
-    </NavigationContainer>
-    );
+    </NavigationContainer>)
+      }
+      
   }
 }
 
@@ -188,7 +216,8 @@ const mapStateToProps=(state)=>{
     dishes: state.dishes,
     comments: state.comments,
     promotions: state.promotions,
-    leaders: state.leaders
+    leaders: state.leaders,
+    UserState: state.UserState
   }
 }
   
